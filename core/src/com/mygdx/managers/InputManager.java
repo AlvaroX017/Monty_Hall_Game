@@ -20,6 +20,9 @@ public class InputManager {
 						break;
 					}
 				}
+				
+				handleRestart(touchX, touchY);
+				
 			}
 	}
 	
@@ -44,6 +47,12 @@ public class InputManager {
 			return true;
 		}
 		return false;
+	}
+	
+	public static void handleRestart(final float touchX, final float touchY) {
+		if(touchX >= GameManager.restartSprite.getX() && touchX <= GameManager.restartSprite.getX() + GameManager.restartSprite.getWidth() && touchY >= GameManager.restartSprite.getY() && touchY <= GameManager.restartSprite.getY() + GameManager.restartSprite.getWidth()) {
+			GameManager.restartGame();
+		}
 	}
 	
 }

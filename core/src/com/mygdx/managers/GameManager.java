@@ -29,7 +29,12 @@ public class GameManager {
 	
 	static float width, height;
 	
+	static Sprite restartSprite;
+	static Texture restartTexture;
+	
 	static Sprite backSprite;
+	
+	static final float RESTART_RESIZE_FACTOR = 5500f;
 	
 	public static enum Level{
 		START,
@@ -50,11 +55,18 @@ public class GameManager {
 		
 		goatIndices = new IntArray();
 		level = Level.START;
+		
+		restartTexture = new Texture(Gdx.files.internal("data/restart.png"));
+		restartSprite = new Sprite(restartTexture);
+		restartSprite.setSize(restartSprite.getWidth()*width/RESTART_RESIZE_FACTOR, restartSprite.getHeight()*width/RESTART_RESIZE_FACTOR);
+		restartSprite.setPosition(0, 0);
 	}
 	
 	public static void renderGame(SpriteBatch batch) {
 		for(Door door : doors) {
 			door.render(batch);
+			
+			restartSprite.draw(batch);
 		}
 	}
 	
@@ -62,6 +74,8 @@ public class GameManager {
 		doorTexture.dispose();
 		carTexture.dispose();
 		goatTexture.dispose();
+		
+		restartTexture.dispose();
 	}
 	
 	public static void initDoors() {
@@ -107,6 +121,25 @@ public class GameManager {
 		}
 		
 		return goatIndices;
+	}
+	
+	public static void restartGame() {
+		doors.shuffle();
+		
+		doors.get(0).position.set(width/DOOR1_HORIZ_POSITION_FACTOR, height/DOOR_VERT_POSITION_FACTOR);
+		doors.get(1).position.set(width/DOOR2_HORIZ_POSITION_FACTOR, height/DOOR_VERT_POSITION_FACTOR);
+		doors.get(2).position.set(width/DOOR3_HORIZ_POSITION_FACTOR, height/DOOR_VERT_POSITION_FACTOR);
+		
+		for(int i = 0; i < GameManager.doors.size; i++) {
+			GameManager.doors.get(i).isOpen = false;
+			
+			GameManager.doors.get(i).closeSprite.setPosition(GameManager.doors.get(i).position.x, GameManager.doors.get(i).position.y);
+			GameManager.doors.get(i).openSprite.setPosition(GameManager.doors.get(i).position.x, GameManager.doors.get(i).position.y);
+		}
+		
+		GameManager.hasWon = false;
+		
+		GameManager.level = GameManager.level.START;
 	}
 	
 }
