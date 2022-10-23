@@ -1,6 +1,7 @@
 package com.mygdx.managers;
 
 import com.mygdx.gameobjects.Door;
+import com.mygdx.managers.TextManager;
 
 import java.lang.System.Logger.Level;
 
@@ -32,6 +33,8 @@ public class GameManager {
 	static Sprite restartSprite;
 	static Texture restartTexture;
 	
+	static Texture backTexture;
+	
 	static Sprite backSprite;
 	
 	static final float RESTART_RESIZE_FACTOR = 5500f;
@@ -56,15 +59,26 @@ public class GameManager {
 		goatIndices = new IntArray();
 		level = Level.START;
 		
+		TextManager.initialize(width, height);
+		
 		restartTexture = new Texture(Gdx.files.internal("data/restart.png"));
 		restartSprite = new Sprite(restartTexture);
 		restartSprite.setSize(restartSprite.getWidth()*width/RESTART_RESIZE_FACTOR, restartSprite.getHeight()*width/RESTART_RESIZE_FACTOR);
 		restartSprite.setPosition(0, 0);
+		
+		backTexture = new Texture(Gdx.files.internal("data/background.jpg"));
+		backSprite = new Sprite(backTexture);
+		backSprite.setSize(width, height);
+		backSprite.setPosition(0, 0f);
 	}
 	
 	public static void renderGame(SpriteBatch batch) {
+		backSprite.draw(batch);
+		
 		for(Door door : doors) {
 			door.render(batch);
+			
+			TextManager.displayMessage(batch);
 			
 			restartSprite.draw(batch);
 		}
@@ -74,8 +88,8 @@ public class GameManager {
 		doorTexture.dispose();
 		carTexture.dispose();
 		goatTexture.dispose();
-		
 		restartTexture.dispose();
+		backTexture.dispose();
 	}
 	
 	public static void initDoors() {
