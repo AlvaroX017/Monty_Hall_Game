@@ -2,6 +2,8 @@ package com.mygdx.managers;
 
 import com.mygdx.gameobjects.Door;
 
+import java.lang.System.Logger.Level;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -17,6 +19,7 @@ public class GameManager {
 	static Texture carTexture;
 	static Texture goatTexture;
 	static Vector3 temp = new Vector3();
+	static IntArray goatIndices;
 	
 	private static final float DOOR_RESIZE_FACTOR = 2500f; 
 	private static final float DOOR_VERT_POSITION_FACTOR = 3f;
@@ -28,6 +31,14 @@ public class GameManager {
 	
 	static Sprite backSprite;
 	
+	public static enum Level{
+		START,
+		CONFIRM,
+		END
+	}
+	
+	static Level level;
+	
 	static boolean hasWon = false;
 	public static void initialize(float width, float height) {
 		GameManager.width = width;
@@ -36,6 +47,9 @@ public class GameManager {
 		carTexture = new Texture(Gdx.files.internal("data/door_open_car.png"));
 		goatTexture = new Texture(Gdx.files.internal("data/door_open_goat.png"));
 		initDoors();
+		
+		goatIndices = new IntArray();
+		level = Level.START;
 	}
 	
 	public static void renderGame(SpriteBatch batch) {
@@ -74,7 +88,25 @@ public class GameManager {
 			door.openSprite.setPosition(door.position.x, door.position.y);
 		}
 		
-
+		doors.get(0).openSprite.setRegion(goatTexture);
+		doors.get(0).isGoat = true;
+		doors.get(1).openSprite.setRegion(carTexture);
+		doors.get(1).isGoat = false;
+		doors.get(2).openSprite.setRegion(goatTexture);
+		doors.get(2).isGoat = true;
+		
+	}
+	
+	public static IntArray getGoatIndices(int selectedDoorIndex) {
+		goatIndices.clear();
+		
+		for(int i = 0; i < doors.size; i++) {
+			if(i!= selectedDoorIndex && doors.get(i).isGoat) {
+				goatIndices.add(i);
+			}
+		}
+		
+		return goatIndices;
 	}
 	
 }

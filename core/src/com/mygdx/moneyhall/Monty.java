@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.managers.GameManager;
+import com.mygdx.managers.InputManager;
 
 
 public class Monty implements ApplicationListener{
@@ -31,7 +32,7 @@ public class Monty implements ApplicationListener{
 		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		Gdx.gl.glClear(16384);
 		this.batch.setProjectionMatrix(this.camera.combined);
-		//InputManager.handleInput(this.camera);
+		InputManager.handleInput(this.camera);
 		this.batch.begin();
 		GameManager.renderGame(this.batch);
 		this.batch.end();
